@@ -6,26 +6,26 @@ import {shallow} from 'enzyme';
 
 import {Groups} from 'mattermost-redux/constants';
 
-import AddGroupsToTeamModal from 'components/add_groups_to_team_modal/add_groups_to_team_modal.jsx';
+import AddGroupsToChannelModal from 'components/add_groups_to_channel_modal/add_groups_to_channel_modal.jsx';
 
-describe('components/AddGroupsToTeamModal', () => {
+describe('components/AddGroupsToChannelModal', () => {
     const baseProps = {
-        currentTeamName: 'foo',
-        currentTeamId: '123',
+        currentChannelName: 'foo',
+        currentChannelId: '123',
         searchTerm: '',
         groups: [],
         onHide: () => { },
         actions: {
-            getGroupsNotAssociatedToTeam: jest.fn().mockResolvedValue({data: true}),
+            getGroupsNotAssociatedToChannel: jest.fn().mockResolvedValue({data: true}),
             setModalSearchTerm: jest.fn().mockResolvedValue({data: true}),
             linkGroupSyncable: jest.fn().mockResolvedValue({data: true, error: null}),
-            getAllGroupsAssociatedToTeam: jest.fn().mockResolvedValue({data: true}),
+            getAllGroupsAssociatedToChannel: jest.fn().mockResolvedValue({data: true}),
         },
     };
 
     test('should match snapshot', () => {
         const wrapper = shallow(
-            <AddGroupsToTeamModal {...baseProps}/>
+            <AddGroupsToChannelModal {...baseProps}/>
         );
         expect(wrapper).toMatchSnapshot();
     });
@@ -34,7 +34,7 @@ describe('components/AddGroupsToTeamModal', () => {
         const onHide = jest.fn();
         const props = {...baseProps, onHide};
         const wrapper = shallow(
-            <AddGroupsToTeamModal {...props}/>
+            <AddGroupsToChannelModal {...props}/>
         );
 
         wrapper.instance().handleExit();
@@ -43,7 +43,7 @@ describe('components/AddGroupsToTeamModal', () => {
 
     test('should match state when handleResponse is called', () => {
         const wrapper = shallow(
-            <AddGroupsToTeamModal {...baseProps}/>
+            <AddGroupsToChannelModal {...baseProps}/>
         );
 
         wrapper.setState({saving: true, addError: ''});
@@ -65,7 +65,7 @@ describe('components/AddGroupsToTeamModal', () => {
         const actions = {...baseProps.actions, linkGroupSyncable};
         const props = {...baseProps, actions};
         const wrapper = shallow(
-            <AddGroupsToTeamModal {...props}/>
+            <AddGroupsToChannelModal {...props}/>
         );
         const instance = wrapper.instance();
         instance.handleResponse = jest.fn();
@@ -79,8 +79,8 @@ describe('components/AddGroupsToTeamModal', () => {
         await wrapper.instance().handleSubmit({preventDefault: jest.fn()});
         expect(actions.linkGroupSyncable).toBeCalled();
         expect(actions.linkGroupSyncable).toHaveBeenCalledTimes(2);
-        expect(actions.linkGroupSyncable).toBeCalledWith('id_1', baseProps.currentTeamId, Groups.SYNCABLE_TYPE_TEAM, {auto_add: true});
-        expect(actions.linkGroupSyncable).toBeCalledWith('id_2', baseProps.currentTeamId, Groups.SYNCABLE_TYPE_TEAM, {auto_add: true});
+        expect(actions.linkGroupSyncable).toBeCalledWith('id_1', baseProps.currentChannelId, Groups.SYNCABLE_TYPE_CHANNEL, {auto_add: true});
+        expect(actions.linkGroupSyncable).toBeCalledWith('id_2', baseProps.currentChannelId, Groups.SYNCABLE_TYPE_CHANNEL, {auto_add: true});
 
         setTimeout(() => {
             expect(instance.handleResponse).toBeCalledTimes(2);
@@ -91,7 +91,7 @@ describe('components/AddGroupsToTeamModal', () => {
 
     test('should match state when addValue is called', () => {
         const wrapper = shallow(
-            <AddGroupsToTeamModal {...baseProps}/>
+            <AddGroupsToChannelModal {...baseProps}/>
         );
 
         wrapper.setState({values: [{id: 'id_1'}]});
@@ -105,23 +105,23 @@ describe('components/AddGroupsToTeamModal', () => {
 
     test('should match state when handlePageChange is called', () => {
         const wrapper = shallow(
-            <AddGroupsToTeamModal {...baseProps}/>
+            <AddGroupsToChannelModal {...baseProps}/>
         );
 
         wrapper.setState({users: [{id: 'id_1'}]});
         wrapper.instance().handlePageChange(0, 1);
-        expect(baseProps.actions.getGroupsNotAssociatedToTeam).toHaveBeenCalledTimes(1);
+        expect(baseProps.actions.getGroupsNotAssociatedToChannel).toHaveBeenCalledTimes(1);
 
         wrapper.instance().handlePageChange(1, 0);
-        expect(baseProps.actions.getGroupsNotAssociatedToTeam).toHaveBeenCalledTimes(2);
+        expect(baseProps.actions.getGroupsNotAssociatedToChannel).toHaveBeenCalledTimes(2);
 
         wrapper.instance().handlePageChange(0, 1);
-        expect(baseProps.actions.getGroupsNotAssociatedToTeam).toHaveBeenCalledTimes(2);
+        expect(baseProps.actions.getGroupsNotAssociatedToChannel).toHaveBeenCalledTimes(2);
     });
 
     test('should match state when search is called', () => {
         const wrapper = shallow(
-            <AddGroupsToTeamModal {...baseProps}/>
+            <AddGroupsToChannelModal {...baseProps}/>
         );
 
         wrapper.instance().search('');
@@ -137,7 +137,7 @@ describe('components/AddGroupsToTeamModal', () => {
 
     test('should match state when handleDelete is called', () => {
         const wrapper = shallow(
-            <AddGroupsToTeamModal {...baseProps}/>
+            <AddGroupsToChannelModal {...baseProps}/>
         );
 
         wrapper.setState({values: [{id: 'id_1'}]});
@@ -148,7 +148,7 @@ describe('components/AddGroupsToTeamModal', () => {
 
     test('should match when renderOption is called', () => {
         const wrapper = shallow(
-            <AddGroupsToTeamModal {...baseProps}/>
+            <AddGroupsToChannelModal {...baseProps}/>
         );
 
         const option = {id: 'id', last_picture_update: '12345', email: 'test@test.com'};
@@ -166,7 +166,7 @@ describe('components/AddGroupsToTeamModal', () => {
 
     test('should match when renderValue is called', () => {
         const wrapper = shallow(
-            <AddGroupsToTeamModal {...baseProps}/>
+            <AddGroupsToChannelModal {...baseProps}/>
         );
 
         expect(wrapper.instance().renderValue({data: {display_name: 'foo'}})).toEqual('foo');
